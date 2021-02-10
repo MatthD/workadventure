@@ -498,6 +498,7 @@ export class MediaManager {
                 )
                 +
                 `<video id="${userId}" autoplay></video>
+                <img src="resources/logos/blockSign.svg" id="blocking-${userId}" class="block-logo">
             </div>
         `;
 
@@ -579,6 +580,10 @@ export class MediaManager {
         }
     }
 
+    toggleBlockLogo(userId: number, show: boolean): void {
+        const blockLogoElement = HtmlUtils.getElementByIdOrFail<HTMLImageElement>('blocking-'+userId);
+        show ? blockLogoElement.classList.add('active') : blockLogoElement.classList.remove('active');
+    }
     addStreamRemoteVideo(userId: string, stream : MediaStream): void {
         const remoteVideo = this.remoteVideo.get(userId);
         if (remoteVideo === undefined) {

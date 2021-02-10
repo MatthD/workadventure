@@ -116,6 +116,15 @@ body .message-info.warning{
     right: 40px;
     left: auto;
 }
+.video-container img.active {
+    display: block !important;
+}
+.video-container img.block-logo {
+    left: 30%;
+    bottom: 15%;
+    width: 150px;
+    height: 150px;
+}
 
 .video-container video{
     height: 100%;
@@ -193,10 +202,7 @@ video#myCamVideo{
     transition: all .2s;
     right: 224px;
 }
-/*.btn-call{
-    transition: all .1s;
-    left: 0px;
-}*/
+
 .btn-cam-action div img{
     height: 22px;
     width: 30px;

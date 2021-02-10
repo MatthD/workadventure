@@ -93,10 +93,10 @@ export class VideoPeer extends Peer {
                 // Find a way to block A's output stream in A's js client
                 //However, the output stream stream B is correctly blocked in A client
                 this.blocked = true;
-                this.muteStream(this.remoteStream, false);
+                this.toggleRemoteStream(false);
             } else if(message.type === MESSAGE_TYPE_UNBLOCKED) {
                 this.blocked = false;
-                this.muteStream(this.remoteStream, true);
+                this.toggleRemoteStream(true);
             }
         });
 
@@ -107,13 +107,13 @@ export class VideoPeer extends Peer {
         this.pushVideoToRemoteUser();
         this.onBlockSubscribe = blackListManager.onBlockStream.subscribe((userId) => {
             if (userId === this.userId) {
-                this.remoteStream.getTracks().forEach(track => track.enabled = false);
+                this.toggleRemoteStream(false);
                 this.sendBlockMessage(true);
             }
         });
         this.onUnBlockSubscribe = blackListManager.onUnBlockStream.subscribe((userId) => {
             if (userId === this.userId) {
-                this.remoteStream.getTracks().forEach(track => track.enabled = true);
+                this.toggleRemoteStream(true);
                 this.sendBlockMessage(false);
             }
         });
@@ -127,10 +127,9 @@ export class VideoPeer extends Peer {
         this.write(new Buffer(JSON.stringify({type: blocking ? MESSAGE_TYPE_BLOCKED : MESSAGE_TYPE_UNBLOCKED, name: this.userName.toUpperCase(), userId: this.userId, message: ''})));
     }
 
-    private muteStream(stream: MediaStream, enable: boolean) {
-        stream.getTracks().forEach((track) => {
-            track.enabled = enable;
-        });
+    private toggleRemoteStream(enable: boolean) {
+        this.remoteStream.getTracks().forEach(track => track.enabled = enable);
+        mediaManager.toggleBlockLogo(this.userId, !enable);
     }
 
     private sendWebrtcSignal(data: unknown) {
@@ -148,7 +147,7 @@ export class VideoPeer extends Peer {
         try {
             this.remoteStream = stream;
             if (blackListManager.isBlackListed(this.userId) || this.blocked) {
-                this.muteStream(stream, false);
+                this.toggleRemoteStream(false);
             }
             mediaManager.addStreamRemoteVideo("" + this.userId, stream);
         }catch (err){

@@ -4,9 +4,8 @@
 import {blackListManager} from "./BlackListManager";
 import {HtmlUtils} from "./HtmlUtils";
 
-//todo: use more descriptive icons
-const blockIcon = 'resources/logos/close.svg';
-const cancelBlockIcon = 'resources/logos/discussion.svg';
+const blockIcon = 'resources/logos/blockingIcon.png';
+const cancelBlockIcon = 'resources/logos/cancel.png';
 
 export const getBlockButtonHtml = (userId: string): string => {
     const src = blackListManager.isBlackListed(parseInt(userId)) ? cancelBlockIcon : blockIcon;
